@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM ubuntu:16.04
 
 # Some ENV variables
 ENV PATH="/mattermost/bin:${PATH}"
@@ -8,17 +8,15 @@ ENV MM_VERSION=4.7.0
 ARG edition=enterprise
 
 # Install some needed packages
-RUN apk add --no-cache \
-	ca-certificates \
-	curl \
-	jq \
-	libc6-compat \
-	libffi-dev \
-	linux-headers \
-	mailcap \
-	netcat-openbsd \
-	xmlsec-dev \
-	&& rm -rf /tmp/*
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+      curl \
+      jq \
+      netcat \
+      ca-certificates \
+      xmlsec1 \
+      mime-support \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin
 
 # Get Mattermost
 RUN mkdir -p /mattermost/data \
